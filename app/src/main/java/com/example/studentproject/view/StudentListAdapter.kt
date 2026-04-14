@@ -30,7 +30,8 @@ class StudentListAdapter(val studentList: ArrayList<Student>): RecyclerView.Adap
         holder.binding.txtName.text = studentList[position].name
 
         holder.binding.btnDetail.setOnClickListener {
-            val action = StudentListFragmentDirections.actionStudentDetail()
+            val nrp = studentList[position].id
+            val action = StudentListFragmentDirections.actionStudentDetail(nrp)
             Navigation.findNavController(it).navigate(action)
         }
     }
