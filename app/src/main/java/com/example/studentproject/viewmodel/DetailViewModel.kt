@@ -14,11 +14,12 @@ import com.google.gson.reflect.TypeToken
 
 class DetailViewModel(application: Application): AndroidViewModel(application) {
     val studentLD = MutableLiveData<Student>()
+    val errorLD = MutableLiveData<Boolean>()
     private val TAG = "volleyTag"
     private var queue: RequestQueue?=null
     fun fetch(id: String) {
         val url = "https://www.jsonkeeper.com/b/LLMW"
-
+        errorLD.value = false
         val stringRequest = StringRequest(Request.Method.GET, url,
             {
                 val sType = object : TypeToken<List<Student>>() { }.type
@@ -28,11 +29,17 @@ class DetailViewModel(application: Application): AndroidViewModel(application) {
             },
             {
                 Log.e("volleyStatus", it.message.toString())
+                errorLD.value = true
             })
         stringRequest.tag = TAG
         queue?.add(stringRequest)
 //        val student1 = Student("16055","Nonie","1998/03/28","5718444778",
 //            "http://dummyimage.com/75x100.jpg/cc0000/ffffff")
 //        studentLD.value = student1
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        queue?.cancelAll(TAG)
     }
 }
